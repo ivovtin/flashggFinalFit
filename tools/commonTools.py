@@ -23,6 +23,7 @@ def extractWSFileNames( _inputWSDir ):
 def extractListOfProcs( _listOfWSFileNames ):
   procs = []
   for fName in _listOfWSFileNames:
+    print"fName = ",fName 
     p = fName.split("pythia8_")[1].split(".root")[0]
     if p not in procs: procs.append(p)
   return ",".join(procs)

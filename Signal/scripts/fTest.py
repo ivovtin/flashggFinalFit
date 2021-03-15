@@ -70,14 +70,17 @@ MH.setConstant(True)
 # Loop over processes: extract sum entries and fill dict. Default nRV,nWV = 1,1
 df = pd.DataFrame(columns=['proc','sumEntries','nRV','nWV'])
 procYields = od()
-for proc in opt.procs.split(","):  
-  WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,opt.mass,proc))[0]
-  ##WSFileName = glob.glob("%s/output*%s.root"%(opt.inputWSDir,proc))[0]
+for proc in opt.procs.split(","):
+  print"proc=",proc  
+  ##WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,opt.mass,proc))[0]
+  WSFileName = glob.glob("%s/output*%s.root"%(opt.inputWSDir,proc))[0]
   ##print "%s"%(WSFileName) 
   f = ROOT.TFile(WSFileName,"read")
   inputWS = f.Get(inputWSName__)
   ##print "\n %s"%(inputWSName__)
-  d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(proc.split("_")[0]),opt.mass,sqrts__,opt.cat)),aset)
+  print"test=%s_%s_%s_%s"%(proc,sqrts__,opt.mass,opt.cat)
+  #d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(proc.split("_")[0]),opt.mass,sqrts__,opt.cat)),aset)
+  d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(proc,sqrts__,opt.mass,opt.cat)),aset)
   ##d = reduceDataset(inputWS.data("all_HH_nodes_%s_%s"%(sqrts__,opt.cat)),aset)
   ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,opt.cat)),aset)
   df.loc[len(df)] = [proc,d.sumEntries(),1,1]
@@ -95,11 +98,12 @@ for pidx, proc in enumerate(procsToFTest):
 
   # Split dataset to RV/WV: ssf requires input as dict (with mass point as key)
   datasets_RV, datasets_WV = od(), od()
-  WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,opt.mass,proc))[0]
-  ##WSFileName = glob.glob("%s/output*%s.root"%(opt.inputWSDir,proc))[0]
+  ##WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,opt.mass,proc))[0]
+  WSFileName = glob.glob("%s/output*%s.root"%(opt.inputWSDir,proc))[0]
   f = ROOT.TFile(WSFileName,"read")
   inputWS = f.Get(inputWSName__)
-  d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(proc.split("_")[0]),opt.mass,sqrts__,opt.cat)),aset)
+  ##d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(proc.split("_")[0]),opt.mass,sqrts__,opt.cat)),aset)
+  d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(proc,sqrts__,opt.mass,opt.cat)),aset)
   ##d = reduceDataset(inputWS.data("all_HH_nodes_%s_%s"%(sqrts__,opt.cat)),aset)
   ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,opt.cat)),aset)
   datasets_RV[opt.mass] = splitRVWV(d,aset,mode="RV")
