@@ -53,12 +53,14 @@ for _mp in opt.massPoints.split(","):
     print "    * proc = %s"%_proc
     # Find corresponding file
     _WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,_mp,_proc))[0]
+    ##_WSFileName = glob.glob("%s/output_%s.root"%(opt.inputWSDir,_proc))[0]
     f = ROOT.TFile(_WSFileName,'read')
     inputWS = f.Get(inputWSName__)
 
     # Loop over categories
     for _cat in allCats.split(","):
       nominalDataName = "%s_%s_%s_%s"%(procToData(_proc.split("_")[0]),_mp,sqrts__,_cat)
+      ##nominalDataName = "ggh_125_%s_%s"%(sqrts__,_cat)
       _granular_key = "%s__%s"%(_proc,_cat)
       nominalData = inputWS.data(nominalDataName)
       _nominal_yield = nominalData.sumEntries()

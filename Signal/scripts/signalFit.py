@@ -90,6 +90,7 @@ else: xsbrMap = globalXSBRMap[opt.analysis]
 
 # Load RooRealVars
 nominalWSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,MHNominal,opt.proc))[0]
+##nominalWSFileName = glob.glob("%s/output_%s.root"%(opt.inputWSDir,opt.proc))[0]
 f0 = ROOT.TFile(nominalWSFileName,"read")
 inputWS0 = f0.Get(inputWSName__)
 xvar = inputWS0.var(opt.xvar)
@@ -106,9 +107,11 @@ MH.setConstant(True)
 if opt.skipZeroes:
   # Extract nominal mass dataset and see if entries == 0
   WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,MHNominal,opt.proc))[0]
+  ##WSFileName = glob.glob("%s/output_%s.root"%(opt.inputWSDir,opt.proc))[0]
   f = ROOT.TFile(WSFileName,"read")
   inputWS = f.Get(inputWSName__)
   d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(opt.proc.split("_")[0]),MHNominal,sqrts__,opt.cat)),aset)
+  ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,opt.cat)),aset)
   if( d.numEntries() == 0. )|( d.sumEntries <= 0. ):
     print " --> (%s,%s) has zero events. Will not construct signal model"%(opt.proc,opt.cat)
     exit()
@@ -152,9 +155,11 @@ nominalDatasets = od()
 datasetRVForFit = od()
 for mp in opt.massPoints.split(","):
   WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,mp,procRVFit))[0]
+  ##WSFileName = glob.glob("%s/output_%s.root"%(opt.inputWSDir,procRVFit))[0]
   f = ROOT.TFile(WSFileName,"read")
   inputWS = f.Get(inputWSName__)
   d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(procRVFit.split("_")[0]),mp,sqrts__,catRVFit)),aset)
+  ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,catRVFit)),aset)
   nominalDatasets[mp] = d.Clone()
   if opt.skipVertexScenarioSplit: datasetRVForFit[mp] = d
   else: datasetRVForFit[mp] = splitRVWV(d,aset,mode="RV")
@@ -167,9 +172,11 @@ if( datasetRVForFit[MHNominal].numEntries() < opt.replacementThreshold  )|( data
   procReplacementFit, catReplacementFit = rMap['procRVMap'][opt.cat], rMap['catRVMap'][opt.cat]
   for mp in opt.massPoints.split(","):
     WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,mp,procReplacementFit))[0]
+    ##WSFileName = glob.glob("%s/output_%s.root"%(opt.inputWSDir,procReplacementFit))[0]
     f = ROOT.TFile(WSFileName,"read")
     inputWS = f.Get(inputWSName__)
     d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(procReplacementFit.split("_")[0]),mp,sqrts__,catReplacementFit)),aset)
+    ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,catReplacementFit)),aset)
     if opt.skipVertexScenarioSplit: datasetRVForFit[mp] = d
     else: datasetRVForFit[mp] = splitRVWV(d,aset,mode="RV")
     inputWS.Delete()
@@ -206,9 +213,11 @@ if not opt.skipVertexScenarioSplit:
   datasetWVForFit = od()
   for mp in opt.massPoints.split(","):
     WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,mp,procWVFit))[0]
+    ##WSFileName = glob.glob("%s/output_%s.root"%(opt.inputWSDir,procWVFit))[0]
     f = ROOT.TFile(WSFileName,"read")
     inputWS = f.Get(inputWSName__)
     d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(procWVFit.split("_")[0]),mp,sqrts__,catWVFit)),aset)
+    ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,catWVFit)),aset)
     datasetWVForFit[mp] = splitRVWV(d,aset,mode="WV")
     inputWS.Delete()
     f.Close()
@@ -222,6 +231,7 @@ if not opt.skipVertexScenarioSplit:
       f = ROOT.TFile(WSFileName,"read")
       inputWS = f.Get(inputWSName__)
       d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(procReplacementFit.split("_")[0]),mp,sqrts__,catReplacementFit)),aset)
+      ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,catReplacementFit)),aset)
       datasetWVForFit[mp] = splitRVWV(d,aset,mode="WV")
       inputWS.Delete()
       f.Close()
@@ -263,11 +273,15 @@ if not opt.skipBeamspotReweigh:
 # If using nGaussian fit then extract nGaussians from fTest json file
 if not opt.useDCB:
   with open("%s/outdir_%s/fTest/json/nGauss_%s.json"%(swd__,opt.ext,catRVFit)) as jf: ngauss = json.load(jf)
+  print "%s; %s"%(procRVFit,catRVFit)
   nRV = int(ngauss["%s__%s"%(procRVFit,catRVFit)]['nRV'])
+  ##nRV = int(ngauss["%s_%s"%(procRVFit,catRVFit)]['nRV'])
+  ##nRV = int(ngauss["GG2H_%s"%(catRVFit)]['nRV'])
   if opt.skipVertexScenarioSplit: print " --> Fitting function: convolution of nGaussians (%g)"%nRV
   else: 
     with open("%s/outdir_%s/fTest/json/nGauss_%s.json"%(swd__,opt.ext,catWVFit)) as jf: ngauss = json.load(jf)
     nWV = int(ngauss["%s__%s"%(procWVFit,catWVFit)]['nWV'])
+    ##nWV = int(ngauss["GG2H_%s"%(catWVFit)]['nWV'])
     print " --> Fitting function: convolution of nGaussians (RV=%g,WV=%g)"%(nRV,nWV)
 else:
   print " --> Fitting function: DCB + 1 Gaussian"

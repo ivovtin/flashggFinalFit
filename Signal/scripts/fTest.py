@@ -52,8 +52,10 @@ if opt.doPlots:
 
 # Load xvar to fit
 nominalWSFileName = glob.glob("%s/output*"%(opt.inputWSDir))[0]
+##print "%s"%(nominalWSFileName)
 f0 = ROOT.TFile(nominalWSFileName,"read")
 inputWS0 = f0.Get(inputWSName__)
+##print "%s"%(inputWS0)
 xvar = inputWS0.var(opt.xvar)
 xvarFit = xvar.Clone()
 dZ = inputWS0.var("dZ")
@@ -68,12 +70,18 @@ MH.setConstant(True)
 # Loop over processes: extract sum entries and fill dict. Default nRV,nWV = 1,1
 df = pd.DataFrame(columns=['proc','sumEntries','nRV','nWV'])
 procYields = od()
-for proc in opt.procs.split(","):
+for proc in opt.procs.split(","):  
   WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,opt.mass,proc))[0]
+  ##WSFileName = glob.glob("%s/output*%s.root"%(opt.inputWSDir,proc))[0]
+  ##print "%s"%(WSFileName) 
   f = ROOT.TFile(WSFileName,"read")
   inputWS = f.Get(inputWSName__)
+  ##print "\n %s"%(inputWSName__)
   d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(proc.split("_")[0]),opt.mass,sqrts__,opt.cat)),aset)
+  ##d = reduceDataset(inputWS.data("all_HH_nodes_%s_%s"%(sqrts__,opt.cat)),aset)
+  ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,opt.cat)),aset)
   df.loc[len(df)] = [proc,d.sumEntries(),1,1]
+  print "d.sumEntries()=%d"%(d.sumEntries())
   inputWS.Delete()
   f.Close()
 
@@ -82,16 +90,23 @@ if( opt.nProcsToFTest == -1)|( opt.nProcsToFTest > len(opt.procs.split(",")) ): 
 else: procsToFTest = list(df.sort_values('sumEntries',ascending=False)[0:opt.nProcsToFTest].proc.values)
 for pidx, proc in enumerate(procsToFTest): 
 
+  print "%s"%(proc)
   print "\n --> Process (%g): %s"%(pidx,proc)
 
   # Split dataset to RV/WV: ssf requires input as dict (with mass point as key)
   datasets_RV, datasets_WV = od(), od()
   WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,opt.mass,proc))[0]
+  ##WSFileName = glob.glob("%s/output*%s.root"%(opt.inputWSDir,proc))[0]
   f = ROOT.TFile(WSFileName,"read")
   inputWS = f.Get(inputWSName__)
   d = reduceDataset(inputWS.data("%s_%s_%s_%s"%(procToData(proc.split("_")[0]),opt.mass,sqrts__,opt.cat)),aset)
+  ##d = reduceDataset(inputWS.data("all_HH_nodes_%s_%s"%(sqrts__,opt.cat)),aset)
+  ##d = reduceDataset(inputWS.data("ggh_125_%s_%s"%(sqrts__,opt.cat)),aset)
   datasets_RV[opt.mass] = splitRVWV(d,aset,mode="RV")
   datasets_WV[opt.mass] = splitRVWV(d,aset,mode="WV")
+
+  print "%d"%(opt.threshold)
+  print "%d"%(datasets_RV[opt.mass].numEntries())
 
   # Run fTest: RV
   # If numEntries below threshold then keep as n = 1
@@ -101,6 +116,7 @@ for pidx, proc in enumerate(procsToFTest):
     min_reduced_chi2, nGauss_opt = 999, 1
     for nGauss in range(1,opt.nGaussMax+1):
       k = "nGauss_%g"%nGauss
+      print "nGauss=%d"%(nGauss)
       ssf = SimultaneousFit("fTest_RV_%g"%nGauss,proc,opt.cat,datasets_RV,xvar.Clone(),MH,MHLow,MHHigh,opt.mass,opt.nBins,0,opt.minimizerMethod,opt.minimizerTolerance,verbose=False)
       ssf.buildNGaussians(nGauss)
       ssf.runFit()
