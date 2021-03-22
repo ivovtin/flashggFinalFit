@@ -1,17 +1,17 @@
-YEAR="2016"
+#YEAR="2016"
 #YEAR="2017"
-#YEAR="2018"
+YEAR="2018"
 mergeYears=0  #used for all procs
-mergeCats=0 #used for single Higgs and 12 DoubleHTag cats only, not for VBF
+mergeCats=1 #used for single Higgs and 12 DoubleHTag cats only, not for VBF - need for SingleH
 PAPER=1
 
 
 DATE="18_02_2020"
 
-#EXT="singleHiggs"$YEAR
+EXT="singleHiggs"$YEAR
 #EXT="hhNLO"$YEAR
 #EXT="qqHH"$YEAR
-EXT="hh_node_SM"$YEAR
+#EXT="hh_node_SM"$YEAR
 
 #INDIR="/work/nchernya/DiHiggs/inputs/${DATE}/"
 INDIR="/afs/cern.ch/work/i/ivovtin/public/HHbbgg_ntuples/${DATE}/"
@@ -33,7 +33,7 @@ CATS="DoubleHTag_0,DoubleHTag_1,DoubleHTag_2,DoubleHTag_3,DoubleHTag_4,DoubleHTa
 #CATS="VBFDoubleHTag_0"
 
 #############SINGLE HIGGS ############
-#PROCS="ggh,tth,qqh,vh"
+PROCS="ggh,tth,qqh,vh"
 #############HH NLO ############
 #PROCS="ggHH_kl_0_kt_1,ggHH_kl_1_kt_1,ggHH_kl_2p45_kt_1,ggHH_kl_5_kt_1"
 ############# qqHH NLO ############
@@ -43,7 +43,7 @@ CATS="DoubleHTag_0,DoubleHTag_1,DoubleHTag_2,DoubleHTag_3,DoubleHTag_4,DoubleHTa
 #PROCS="qqHH_CV_1_C2V_0_kl_1,qqHH_CV_1_C2V_1_kl_1,qqHH_CV_1_C2V_1_kl_0,qqHH_CV_1_C2V_1_kl_2"
 #PROCS="ggHH_kl_2p45_kt_1"
 #PROCS="qqHH_CV_1_C2V_1_kl_1"
-PROCS="hh_node_SM"
+#PROCS="hh_node_SM"
 ################################
 
 set -x

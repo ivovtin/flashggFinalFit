@@ -1,5 +1,5 @@
-doFTEST=1
-doFIT=0
+doFTEST=0
+doFIT=1
 doPACKAGER=0
 doPLOTS=0
 doCALCPHOSYST=0 #Not needed, only for shape syst, checked to be negligible
@@ -15,6 +15,7 @@ DATE="18_02_2020"
 #DATE="22_04_2020"
 #DATE="27_03_2020"
 EXT="singleHiggs"$YEAR
+##EXT="hh_node_SM_"$YEAR
 #EXT="hhNLO"$YEAR
 #EXT="qqHH"$YEAR
 #EXT="nodes"$YEAR
@@ -54,12 +55,12 @@ SCALESGLOBAL="NonLinearity,Geant4,LightYield,Absolute"
 
 
 #############SINGLE HIGGS ############
-#PROCS="ggh_${YEAR},tth_${YEAR},qqh_${YEAR},vh_${YEAR}"
+PROCS="ggh_${YEAR},tth_${YEAR},qqh_${YEAR},vh_${YEAR}"
 #PROCS="vh_${YEAR}"
-#REFPROC="vh_${YEAR}"
-#INFILES="output_ggh_${YEAR},output_tth_${YEAR},output_qqh_${YEAR},output_vh_${YEAR}"
+REFPROC="vh_${YEAR}"
+INFILES="output_ggh_${YEAR},output_tth_${YEAR},output_qqh_${YEAR},output_vh_${YEAR}"
 #INFILES="output_vh_${YEAR}"
-#REFTAG="DoubleHTag_9"
+REFTAG="DoubleHTag_9"
 #############HH NLO ############
 #REFPROC="ggHH_kl_0_kt_1_${YEAR}"
 #PROCS="ggHH_kl_0_kt_1_${YEAR},ggHH_kl_1_kt_1_${YEAR},ggHH_kl_2p45_kt_1_${YEAR},ggHH_kl_5_kt_1_${YEAR}"
@@ -72,9 +73,9 @@ SCALESGLOBAL="NonLinearity,Geant4,LightYield,Absolute"
 ################################
 
 #############NODES ############
-REFPROC="hh_node_SM_$YEAR"
-PROCS="hh_node_SM_$YEAR"
-INFILES="output_hh_node_SM_$YEAR"
+##REFPROC="hh_node_SM_$YEAR"
+##PROCS="hh_node_SM_$YEAR"
+##INFILES="output_hh_node_SM_$YEAR"
 ################################
 #REFPROC="vbfhh_$YEAR"
 #PROCS="vbfhh_$YEAR"
