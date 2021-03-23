@@ -5,9 +5,9 @@ doPLOTS=0
 doCALCPHOSYST=0 #Not needed, only for shape syst, checked to be negligible
 MASS=''
 
-YEAR="2016"
+#YEAR="2016"
 #YEAR="2017"
-#YEAR="2018"
+YEAR="2018"
 
 
 DATE="18_02_2020"
@@ -32,7 +32,7 @@ if [ $doFTEST -gt 0 ]; then
 fi
 CONFIGDAT="output/out_${DATE}_${EXT}/dat/newConfig_${EXT}.dat"
 runLocal='--runLocal'
-#runLocal=''
+##runLocal=''
 
 #COndor
 BATCH=HTCONDOR
@@ -57,7 +57,7 @@ SCALESGLOBAL="NonLinearity,Geant4,LightYield,Absolute"
 #############SINGLE HIGGS ############
 PROCS="ggh_${YEAR},tth_${YEAR},qqh_${YEAR},vh_${YEAR}"
 #PROCS="vh_${YEAR}"
-REFPROC="vh_${YEAR}"
+REFPROC="tth_${YEAR}"
 INFILES="output_ggh_${YEAR},output_tth_${YEAR},output_qqh_${YEAR},output_vh_${YEAR}"
 #INFILES="output_vh_${YEAR}"
 REFTAG="DoubleHTag_9"
